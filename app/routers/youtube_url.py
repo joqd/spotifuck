@@ -39,8 +39,8 @@ async def youtube_url(message: Message) -> None:
         await alert.edit_text(f"filesize more than {MAX_FILESIZE // (1024 * 1024)}MB")
     except asyncio.TimeoutError:
         await alert.edit_text("Timeout error")
-    except errors.IsPlaylist:
-        await alert.edit_text("It's playlist bro!")
+    except errors.IsLive:
+        await alert.edit_text("It's live bro!")
     except Exception as e:
         print(f"Unexpected error: {e}")
         await alert.edit_text("An unexpected error occurred.")
@@ -73,6 +73,9 @@ async def download_audio(url: str) -> tuple[str, dict]:
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
             info = ydl.sanitize_info(info)
+
+            if info.get('is_live'):
+                raise errors.IsLive()
 
             if info.get('filesize', 0) > MAX_FILESIZE:
                 raise errors.OversizeFile()

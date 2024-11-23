@@ -5,6 +5,6 @@ class OversizeFile(Exception):
         super().__init__(message)
 
 
-class IsPlaylist(Exception):
-    def __init__(self, message: str = "Playlists are not allowed."):
+class IsLive(Exception):
+    def __init__(self, message: str = "Live stream are not allowed."):
         super().__init__(message)
