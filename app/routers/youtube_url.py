@@ -14,7 +14,7 @@ router = Router()
 
 # Constants
 YOUTUBE_URL_REGEX = r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$"
-MAX_FILESIZE = 3 * (1024 * 1024)  # 3 MB
+MAX_FILESIZE = 49 * (1024 * 1024)  # 3 MB
 AUDIO_FORMAT = 'm4a'
 
 
@@ -39,6 +39,8 @@ async def youtube_url(message: Message) -> None:
         await alert.edit_text(f"filesize more than {MAX_FILESIZE // (1024 * 1024)}MB")
     except asyncio.TimeoutError:
         await alert.edit_text("Timeout error")
+    except errors.IsPlaylist:
+        await alert.edit_text("It's playlist bro!")
     except Exception as e:
         print(f"Unexpected error: {e}")
         await alert.edit_text("An unexpected error occurred.")
@@ -64,6 +66,7 @@ async def download_audio(url: str) -> tuple[str, dict]:
         }],
         'max_filesize': MAX_FILESIZE,
         'outtmpl': outtmpl,
+        'noplaylist': True,
     }
 
     def inner():
