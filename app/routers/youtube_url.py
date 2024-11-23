@@ -98,7 +98,20 @@ async def send_audio(message: Message, audio_path: str, info: dict) -> None:
     :param info: Metadata of the downloaded file.
     """
     title = info.get("title", "Unknown")
-    thumbnail = info.get("thumbnail")
+    
+    thumbnails = info.get("thumbnails", [])
+    for t in thumbnails[::-1]:
+        try:
+            resolution = t.get("resolution")
+            height = resolution.split("x")[0]
+            height = int(height)
+
+            if height < 320:
+                thumbnail = t.get("url")
+                break
+        except: continue
+    else:
+        thumbnail = None
 
     duration = info.get("duration")
     try:
