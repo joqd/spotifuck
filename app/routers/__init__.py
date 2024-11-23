@@ -4,6 +4,7 @@ from . import (
     ping,
     youtube_url,
     soundcloud_url,
+    spotify_url,
 )
 
 def setup(dp: Dispatcher) -> None:
@@ -11,4 +12,5 @@ def setup(dp: Dispatcher) -> None:
         ping.router,
         youtube_url.router,
         soundcloud_url.router,
+        spotify_url.router,
     )
