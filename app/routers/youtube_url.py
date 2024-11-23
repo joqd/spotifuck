@@ -23,7 +23,7 @@ async def youtube_url(message: Message) -> None:
     """
     Handles messages containing YouTube URLs, downloads the audio, and uploads it.
     """
-    alert = await message.answer("Downloading...")
+    alert = await message.answer("Downloading (soundcloud)...")
     audio_path = None
 
     try:
