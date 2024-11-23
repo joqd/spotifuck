@@ -92,8 +92,13 @@ async def send_audio(message: Message, audio_path: str, info: dict) -> None:
     :param info: Metadata of the downloaded file.
     """
     title = info.get("title", "Unknown")
-    duration = info.get("duration")
     thumbnail = info.get("thumbnail")
+
+    duration = info.get("duration")
+    try:
+        duration = int(duration) if duration is not None else None
+    except (ValueError, TypeError):
+        duration = None
 
     await message.answer_audio(
         audio=FSInputFile(audio_path, filename=title),
