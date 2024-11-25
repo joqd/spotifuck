@@ -1,8 +1,9 @@
 from aiogram.types import Message, FSInputFile, URLInputFile
 from aiogram import Router, F
-from yt_dlp import YoutubeDL
 
 from ..settings import DOWNLOAD_DIR
+from ..utils import cleanup_file
+from ..utils import spam_checker
 from .. import errors
 
 from uuid import uuid4
@@ -10,37 +11,52 @@ import subprocess
 import asyncio
 import json
 import os
+import re
 
 router = Router()
 
 
 # Constants
-SPOTIFY_URL_REGEX = r"^(https:\/\/open.spotify.com\/track\/)([a-zA-Z0-9]+)(.*)$"
-MAX_FILESIZE = 49 * (1024 * 1024)  # 3 MB
+SPOTIFY_URL_REGEX = r".*(https:\/\/open.spotify.com\/track\/)([a-zA-Z0-9]+)(.*).*"
+MAX_FILESIZE = 49 * (1024 * 1024)
 AUDIO_FORMAT = 'm4a'
 
 
 @router.message(F.text.regexp(SPOTIFY_URL_REGEX))
 async def spotify_url(message: Message) -> None:
     """
-    Handles messages containing YouTube URLs, downloads the audio, and uploads it.
+    Handles messages containing Spotify, downloads the audio, and uploads it.
     """
-    alert = await message.answer("Downloading (spotify)...")
+    link = re.findall(r'https?://[^\s]+', message.text)[0]
+    alert = await message.answer("🔎 دریافت اطلاعات از اسپاتیفای")
     audio_path = None
+
+    seconds = spam_checker(message.from_user.id)
+    if seconds:
+        await message.reply(f"برای جلوگیری از اسپم لطفا {seconds} ثانیه دیگر تلاش کنید")
+        return
 
     try:
         # Download the audio file
-        audio_path, info = await download_audio_from_spotify(message.text)
-        await alert.edit_text("Uploading...")
+        audio_path, info = await download_audio_from_spotify(link)
+        await alert.edit_text("📤 در حال آپلود...")
+
+        # Get file size in bytes
+        file_size_bytes = os.path.getsize(audio_path)
+        file_size_mb = file_size_bytes // (1024 * 1024)
+        if file_size_mb > 49:
+            raise errors.OversizeFile()
 
         # Send the audio file to the user
         await send_audio(message, audio_path, info)
         await alert.delete()
+    except errors.OversizeFile:
+        await alert.edit_text("به دلیل محدودیت های تلگرام امکان آپلود فایل های بیشتر از ۵۰ مگابایت وجود ندارد")
     except asyncio.TimeoutError:
-        await alert.edit_text("Timeout error")
+        await alert.edit_text("مهلت انجام عملیات به پایان رسید، لطفا دوباره تلاش کنید")
     except Exception as e:
         print(f"Unexpected error: {e}")
-        await alert.edit_text("An unexpected error occurred.")
+        await alert.edit_text("یک خطای غیر منتظره رخ داد، لطفا بعدا تلاش کنید")
     finally:
         if audio_path:
             cleanup_file(audio_path)
@@ -85,19 +101,10 @@ async def send_audio(message: Message, audio_path: str, info: dict) -> None:
     except (ValueError, TypeError):
         duration = None
 
+    me = await message.bot.get_me()
     await message.answer_audio(
         audio=FSInputFile(audio_path, filename=title),
         duration=duration,
         thumbnail=URLInputFile(thumbnail) if thumbnail else None,
+        caption=f"@{me.username}",
     )
-
-
-def cleanup_file(file_path: str) -> None:
-    """
-    Deletes the file from the filesystem.
-    """
-    if file_path and os.path.exists(file_path):
-        try:
-            os.remove(file_path)
-        except Exception as e:
-            print(f"Error cleaning up file {file_path}: {e}")
