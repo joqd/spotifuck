@@ -26,14 +26,14 @@ async def soundcloud_url(message: Message) -> None:
     """
     Handles messages containing SoundCloud URLs, downloads the audio, and uploads it.
     """
-    link = re.findall(r'https?://[^\s]+', message.text)[0]
-    alert = await message.answer("🔎 دریافت اطلاعات از ساوندکلاود")
-    audio_path = None
-
     seconds = spam_checker(message.from_user.id)
     if seconds:
         await message.reply(f"برای جلوگیری از اسپم لطفا {seconds} ثانیه دیگر تلاش کنید")
         return
+    
+    link = re.findall(r'https?://[^\s]+', message.text)[0]
+    alert = await message.answer("🔎 دریافت اطلاعات از ساوندکلاود")
+    audio_path = None
 
     try:
         # Download the audio file

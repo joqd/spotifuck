@@ -24,7 +24,7 @@ def spam_checker(user_id: int) -> int:
         now = datetime.now()
         if user.last_request_at:
             dif = now - user.last_request_at
-            seconds = dif.total_seconds()
+            seconds = int(dif.total_seconds())
             if seconds < 10:
                 return 10 - seconds
         user.last_request_at = now
