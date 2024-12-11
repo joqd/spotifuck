@@ -18,7 +18,7 @@ router = Router()
 # Constants
 YOUTUBE_URL_REGEX = r".*((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?.*"
 MAX_FILESIZE = 49 * (1024 * 1024)  # 49 MB
-AUDIO_FORMAT = 'm4a'
+AUDIO_FORMAT = 'mp3'
 
 
 @router.message(F.text.regexp(YOUTUBE_URL_REGEX))
@@ -38,6 +38,9 @@ async def youtube_url(message: Message) -> None:
     try:
         # Download the audio file
         audio_path, info = await download_audio(link)
+        if not audio_path.endswith(f".{AUDIO_FORMAT}"):
+            audio_path += f".{AUDIO_FORMAT}"
+            
         await alert.edit_text("📤 در حال آپلود...")
 
         # Get file size in bytes
@@ -68,9 +71,9 @@ async def download_audio(url: str) -> tuple[str, dict]:
     """
     Downloads the audio from the given YouTube URL and returns the file path and metadata.
     """
-    outtmpl = (DOWNLOAD_DIR / f'{str(uuid4())}.{AUDIO_FORMAT}').as_posix()
+    outtmpl = (DOWNLOAD_DIR / f'{str(uuid4())}').as_posix()
     ydl_opts = {
-        'format': f'{AUDIO_FORMAT}/bestaudio/best',
+        'format': 'm4a/bestaudio/best',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': AUDIO_FORMAT,

@@ -18,7 +18,7 @@ router = Router()
 # Constants
 SOUNDCLOUD_URL_REGEX = r".*(https?:\/\/)?(www\.)?(soundcloud\.com\/[\w\-]+\/[\w\-]+|on\.soundcloud\.com\/[\w]+)(\/?).*"
 MAX_FILESIZE = 49 * (1024 * 1024)
-AUDIO_FORMAT = 'm4a'
+AUDIO_FORMAT = 'mp3'
 
 
 @router.message(F.text.regexp(SOUNDCLOUD_URL_REGEX))
@@ -38,7 +38,9 @@ async def soundcloud_url(message: Message) -> None:
     try:
         # Download the audio file
         audio_path, info = await download_audio(link)
-        audio_path += ".m4a"
+        if not audio_path.endswith(f".{AUDIO_FORMAT}"):
+            audio_path += f".{AUDIO_FORMAT}"
+
         await alert.edit_text("📤 در حال آپلود...")
 
         # Get file size in bytes
@@ -69,7 +71,7 @@ async def download_audio(url: str) -> tuple[str, dict]:
     """
     outtmpl = (DOWNLOAD_DIR / f'{str(uuid4())}').as_posix()
     ydl_opts = {
-        'format': f'{AUDIO_FORMAT}/bestaudio/best',
+        'format': f'm4a/bestaudio/best',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': AUDIO_FORMAT,

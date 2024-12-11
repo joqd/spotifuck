@@ -19,7 +19,7 @@ router = Router()
 # Constants
 SPOTIFY_URL_REGEX = r".*(https:\/\/open.spotify.com\/track\/)([a-zA-Z0-9]+)(.*).*"
 MAX_FILESIZE = 49 * (1024 * 1024)
-AUDIO_FORMAT = 'm4a'
+AUDIO_FORMAT = 'mp3'
 
 
 @router.message(F.text.regexp(SPOTIFY_URL_REGEX))
