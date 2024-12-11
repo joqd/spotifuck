@@ -1,2 +1,3 @@
 bot:
   token:  "YOUR TOKEN"
+  admins: [000000000, 111111111]
