@@ -5,6 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Define the path to the SQLite database file
 DB_PATH = (BASE_DIR / 'assets/spotifuck.db').as_posix()
+COOKIE_FILE_PATH = (BASE_DIR / 'assets/cookie.txt').as_posix()
 
 # Define the path to the configuration file
 CONFIG_PATH = (BASE_DIR / 'assets/configs/config.yaml').as_posix()

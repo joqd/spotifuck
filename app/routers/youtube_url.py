@@ -2,7 +2,7 @@ from aiogram.types import Message, FSInputFile, URLInputFile
 from aiogram import Router, F
 from yt_dlp import YoutubeDL
 
-from ..settings import DOWNLOAD_DIR
+from ..settings import DOWNLOAD_DIR, COOKIE_FILE_PATH
 from ..utils import cleanup_file
 from ..utils import spam_checker
 from .. import errors
@@ -82,6 +82,9 @@ async def download_audio(url: str) -> tuple[str, dict]:
         'outtmpl': outtmpl,
         'noplaylist': True,
     }
+
+    if os.path.exists(COOKIE_FILE_PATH):
+        ydl_opts['cookiefile'] = COOKIE_FILE_PATH
 
     def inner():
         with YoutubeDL(ydl_opts) as ydl:

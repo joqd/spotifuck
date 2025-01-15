@@ -164,3 +164,4 @@ cython_debug/
 assets/configs/config.yaml
 assets/files/*-temp.*
 assets/*.db
+assets/cookie.txt

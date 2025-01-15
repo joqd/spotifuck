@@ -6,7 +6,7 @@ from aiogram.types.input_file import FSInputFile
 from aiogram.types import File
 from pony.orm import db_session, select
 
-from ..settings import CONFIG_PATH, DB_PATH
+from ..settings import CONFIG_PATH, DB_PATH, COOKIE_FILE_PATH
 from ..database.models import User
 
 import yaml
@@ -92,3 +92,31 @@ async def restore_db(message: Message) -> None:
     except Exception as e:
         print(e)
         await message.answer("failed to restore backup")
+
+
+@router.message(and_f(Command("cookie"), F.from_user.id.in_(config.get('bot').get('admins', []))))
+async def set_cookie_file(message: Message) -> None:
+    if not message.reply_to_message:
+        if os.path.exists(COOKIE_FILE_PATH):
+            await message.bot.send_document(
+                chat_id=message.from_user.id,
+                document=FSInputFile(path=COOKIE_FILE_PATH)
+            ) 
+        else:
+            await message.answer("cookie file not found")
+
+        return
+
+    if not message.reply_to_message.document:
+        await message.answer("you must reply on a document (cookie file)")
+        return
+
+    try:
+        file_id = message.reply_to_message.document.file_id
+        file = await message.bot.get_file(file_id)
+        file_path = file.file_path
+        await message.bot.download_file(file_path, COOKIE_FILE_PATH)
+        await message.answer("done!")
+    except Exception as e:
+        print(e)
+        await message.answer("failed to set cookie file")
