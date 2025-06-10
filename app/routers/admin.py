@@ -18,6 +18,8 @@ with open(CONFIG_PATH, "r") as file:
 
 
 router = Router()
+    
+
 
 @router.message(and_f(Command("status"), F.from_user.id.in_(config.get('bot').get('admins', []))))
 async def status(message: Message) -> None:
@@ -35,21 +37,24 @@ async def send(message: Message) -> None:
         return
 
     with db_session:
-        users = select(u.id for u in User)[:]
+        users = select(u for u in User)[:]
 
     alert = await message.answer("sending...")
+    names = []
 
     counter = 0
     for u in users:
-        if u == message.from_user.id:
+        if u.id == message.from_user.id:
             continue
 
         try:
             await message.bot.copy_message(
-                chat_id=u,
+                chat_id=u.id,
                 from_chat_id=message.from_user.id,
                 message_id=message.reply_to_message.message_id,
             )
+
+            names.append(u.name)
             counter += 1
         except:
             pass
@@ -58,6 +63,7 @@ async def send(message: Message) -> None:
 
     await alert.delete()
     await message.reply(f"sent for {counter} users")
+    await message.reply("\n".join(names[:30]))
 
 
 
