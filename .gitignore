@@ -161,7 +161,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-assets/configs/config.yaml
+config.yaml
 assets/files/*-temp.*
 assets/*.db
 assets/cookie.txt

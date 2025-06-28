@@ -22,12 +22,14 @@ $ pip install -r requirements.txt
 ```
 3. Update the configuration file with your bot token and other required settings:
 ```bash
-$ cp assets/configs/config-example.yaml assets/configs/config.yaml
-$ nano assets/configs/config.yaml
+$ cp config-example.yaml config.yaml
+$ nano config.yaml
 ```
 4. Run the bot
 ```
 $ python3 -m app
+# or
+$ make run
 ```
 
 ## Contributions

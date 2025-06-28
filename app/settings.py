@@ -8,7 +8,7 @@ DB_PATH = (BASE_DIR / 'assets/spotifuck.db').as_posix()
 COOKIE_FILE_PATH = (BASE_DIR / 'assets/cookie.txt').as_posix()
 
 # Define the path to the configuration file
-CONFIG_PATH = (BASE_DIR / 'assets/configs/config.yaml').as_posix()
+CONFIG_PATH = (BASE_DIR / 'config.yaml').as_posix()
 
 # Define download directory
 DOWNLOAD_DIR = BASE_DIR / 'assets/files/'
