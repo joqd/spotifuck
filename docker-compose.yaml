@@ -2,6 +2,7 @@
 services:
   app:
     build: .
-    restart: always
+    container_name: spotifuck-container
+    restart: unless-stopped
     volumes:
       - ./assets:/app/assets
