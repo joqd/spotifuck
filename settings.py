@@ -28,7 +28,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REDIS_HOST: str = str(env('REDIS_HOST', default='localhost')) # type: ignore
 
-REDIS_PORT: int = int(env('REDIS_PORT'), default=6379) # type: ignore
+REDIS_PORT: int = int(env('REDIS_PORT', default=6379)) # type: ignore
+
+REDIS_BROKER_DB: int = int(env('REDIS_BROKER_DB', default=0)) # type: ignore
+
+REDIS_RESULT_DB: int = int(env('REDIS_RESULT_DB', default=1)) # type: ignore
 
 DATABASES = {
     "default": {
@@ -37,4 +41,20 @@ DATABASES = {
     }
 }
 
+TIME_ZONE = 'UTC'
+
 INSTALLED_APPS = ('app',)
+
+# Celery
+CELERY_BROKER_URL    = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BROKER_DB}'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_RESULT_DB}'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TIME_LIMIT = 30
+CELERY_TASK_SOFT_TIME_LIMIT = 25
+CELERY_TASK_ACKS_LATE = True
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_QUEUES = None
