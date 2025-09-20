@@ -31,6 +31,9 @@ class IsCommand(SimpleCustomFilter):
     def check(message: Message):
         command_pattern = r'^\/.*$'
 
+        if not message.text:
+            return False
+
         if re.fullmatch(command_pattern, message.text):
             return True
         
