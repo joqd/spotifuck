@@ -38,3 +38,14 @@ class IsCommand(SimpleCustomFilter):
             return True
         
         return False
+
+
+class IsText(SimpleCustomFilter):
+    key = 'is_text'
+
+    @staticmethod
+    def check(message: Message):
+        if not message.text:
+            return False
+        
+        return True
