@@ -1,0 +1,23 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  default:
+    desc: Run Bot + Celery together
+    deps:
+      - bot
+      - worker
+    silent: true
+
+  bot:
+    desc: Run Bot dev server
+    cmds:
+      - uv run python manage.py runbot
+    silent: true
+
+  worker:
+    desc: Run Celery workers
+    cmds:
+      - uv run celery -A app worker -l info -c 4 --max-tasks-per-child=100
+    silent: true
