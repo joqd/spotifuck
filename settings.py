@@ -10,6 +10,8 @@ env.read_env()
 
 BOT_TOKEN: str = str(env('BOT_TOKEN'))
 
+SUDO: int = int(env('SUDO', default=0)) # type: ignore
+
 LOCAL_BOT_API_BASE_URL: str = env('LOCAL_BOT_API_BASE_URL', default='') # type: ignore
 
 if LOCAL_BOT_API_BASE_URL:
