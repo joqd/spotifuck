@@ -4,6 +4,8 @@ from telebot.types import Message
 from settings import SUDO
 from app.models import User
 
+import re
+
 
 class IsAdmin(SimpleCustomFilter):
     key = 'is_admin'
@@ -20,3 +22,16 @@ class IsAdmin(SimpleCustomFilter):
             return False
         
         return user.is_admin
+
+
+class IsCommand(SimpleCustomFilter):
+    key = 'is_command'
+
+    @staticmethod
+    def check(message: Message):
+        command_pattern = r'^\/.*$'
+
+        if re.fullmatch(command_pattern, message.text):
+            return True
+        
+        return False
