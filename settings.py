@@ -26,6 +26,10 @@ SECRET_KEY = "6few3nci_q_o@l1dlbk81%wcxe!*6r29yu629&d97!hiqat9fa"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REDIS_HOST: str = str(env('REDIS_HOST', default='localhost')) # type: ignore
+
+REDIS_PORT: int = int(env('REDIS_PORT'), default=6379) # type: ignore
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
