@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 env = environ.Env()
-env.read_env()
+env.read_env('.env')
 
 BOT_TOKEN: str = str(env('BOT_TOKEN'))
 
@@ -22,7 +22,7 @@ if LOCAL_BOT_API_BASE_URL:
 
 bot = telebot.TeleBot(token=BOT_TOKEN, use_class_middlewares=True)
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "6few3nci_q_o@l1dlbk81%wcxe!*6r29yu629&d97!hiqat9fa"
 
@@ -43,6 +43,17 @@ DATABASES = {
     }
 }
 
+SPOTIFY_CLIENT_ID: str = str(env('SPOTIFY_CLIENT_ID'))
+
+SPOTIFY_CLIENT_SECRET: str = str(env('SPOTIFY_CLIENT_SECRET'))
+
+COOKIE_FILE = BASE_DIR / 'cookies.txt'
+
+DOWNLOAD_DIR = BASE_DIR / 'downloads'
+DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+HISTORY_CHANNEL: int = int(env('HISTORY_CHANNEL')) # type: ignore
+
 TIME_ZONE = 'UTC'
 
 INSTALLED_APPS = ('app',)
@@ -54,8 +65,8 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_TASK_TIME_LIMIT = 30
-CELERY_TASK_SOFT_TIME_LIMIT = 25
+CELERY_TASK_TIME_LIMIT = 60 * 2
+CELERY_TASK_SOFT_TIME_LIMIT = 60 * 2
 CELERY_TASK_ACKS_LATE = True
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
 CELERY_TASK_TRACK_STARTED = True

@@ -1,7 +1,7 @@
 from telebot.custom_filters import SimpleCustomFilter
 from telebot.types import Message
 
-from settings import SUDO
+from adagio import SUDO
 from app.models import User
 
 import re
@@ -12,7 +12,11 @@ class IsAdmin(SimpleCustomFilter):
 
     @staticmethod
     def check(message: Message):
+        if not message.from_user:
+            return False
+
         user_id = message.from_user.id
+
         if user_id == SUDO:
             return True
         
