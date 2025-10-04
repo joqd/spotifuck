@@ -18,5 +18,5 @@ bot.setup_middleware(WatchdogMiddleware())
 # handlers
 bot.register_message_handler(ping_handler, commands=['ping'])
 bot.register_message_handler(start_handler, commands=['start', 'restart'])
-bot.register_message_handler(status_handler, commands=['status'])
+bot.register_message_handler(status_handler, commands=['status'], is_admin=True)
 bot.register_message_handler(spotdl_query_handler, is_command=False, is_text=True)
