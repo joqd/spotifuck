@@ -4,13 +4,14 @@ from app.views.start import start_handler
 from app.views.admin import status_handler, echo_handler
 from app.views.spotdl_query import spotdl_query_handler
 from app.middlewares import WatchdogMiddleware
-from app.filters import IsAdmin, IsCommand, IsText
+from app.filters import IsAdmin, IsCommand, IsText, IsForward
 
 
 # filters
 bot.add_custom_filter(IsAdmin())
 bot.add_custom_filter(IsCommand())
 bot.add_custom_filter(IsText())
+bot.add_custom_filter(IsForward())
 
 # middlewares
 bot.setup_middleware(WatchdogMiddleware())

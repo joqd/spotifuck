@@ -53,3 +53,14 @@ class IsText(SimpleCustomFilter):
             return False
         
         return True
+
+
+class IsForward(SimpleCustomFilter):
+    key = 'is_forward'
+
+    @staticmethod
+    def check(message: Message):
+        if message.forward_from_chat:
+            return True
+        
+        return False
