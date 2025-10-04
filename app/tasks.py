@@ -11,6 +11,7 @@ from app.utils import download_cover
 from app.utils import download_audio_by_ytdlp
 
 import os
+import time
 
 
 @shared_task
@@ -130,3 +131,37 @@ def downloader(query: str, user_id: int, n_id: int | None = None):
         bot.delete_message(chat_id=user_id, message_id=n_id)
 
     return {'ok': True}
+
+
+@shared_task
+def send_message_to_all_users(from_chat_id: int, message_id: int):
+    n_id = edit_or_send(from_chat_id, 'please wait...', None)
+
+    total = 0
+    success = 0
+
+    users = User.objects.all()
+    users_counts = users.count() - 1
+
+    for user in users:
+        if user.id == from_chat_id:
+            continue
+
+        try:
+            bot.copy_message(
+                chat_id=user.id,
+                from_chat_id=from_chat_id,
+                message_id=message_id,
+            )
+
+            success += 1
+        finally:
+            total += 1
+
+            if total % 100 == 0:
+                time.sleep(1)
+                n_id = edit_or_send(from_chat_id, f'sent for {success}/{users_counts}', n_id)
+            else:
+                time.sleep(0.25)
+
+    n_id = edit_or_send(from_chat_id, f'sent for {success}/{users_counts}', n_id)
