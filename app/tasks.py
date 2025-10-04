@@ -165,3 +165,8 @@ def send_message_to_all_users(from_chat_id: int, message_id: int):
                 time.sleep(0.25)
 
     n_id = edit_or_send(from_chat_id, f'sent for {success}/{users_counts}', n_id)
+
+
+@shared_task
+def random_nightly_music():
+    bot.send_message(chat_id=5479189128, text='fuck you in 22.')

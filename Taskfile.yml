@@ -8,6 +8,7 @@ tasks:
     deps:
       - bot
       - worker
+      - beat
     silent: true
 
   bot:
@@ -20,4 +21,10 @@ tasks:
     desc: Run Celery workers
     cmds:
       - uv run celery -A adagio worker -l info -c 4 --max-tasks-per-child=100
+    silent: true
+
+  beat:
+    desc: Run Celery beats
+    cmds:
+      - uv run celery -A adagio beat -l info
     silent: true
