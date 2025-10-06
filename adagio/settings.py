@@ -20,7 +20,11 @@ if LOCAL_BOT_API_BASE_URL:
     else:
         apihelper.API_URL = LOCAL_BOT_API_BASE_URL + '/bot{0}/{1}'
 
-bot = telebot.TeleBot(token=BOT_TOKEN, use_class_middlewares=True)
+bot = telebot.TeleBot(
+    token=BOT_TOKEN,
+    use_class_middlewares=True,
+    skip_pending=True,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
