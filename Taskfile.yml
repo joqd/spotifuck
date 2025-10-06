@@ -3,7 +3,7 @@
 version: "3"
 
 tasks:
-  dev:
+  run:
     desc: Run Bot + Celery together
     deps:
       - bot
@@ -12,7 +12,7 @@ tasks:
     silent: true
 
   bot:
-    desc: Run Bot dev server
+    desc: Run Bot server
     cmds:
       - uv run python manage.py runbot
     silent: true
