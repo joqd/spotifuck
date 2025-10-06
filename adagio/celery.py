@@ -14,6 +14,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'run-every-night-at-22': {
         'task': 'app.tasks.random_nightly_music',
-        'schedule': crontab(hour=22, minute=35),
+        'schedule': crontab(hour=13, minute=4),
     },
 }

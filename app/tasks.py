@@ -1,4 +1,5 @@
 from celery import shared_task
+from django.utils import timezone
 
 from adagio import bot
 from adagio import HISTORY_CHANNEL
@@ -12,6 +13,10 @@ from app.utils import download_audio_by_ytdlp
 
 import os
 import time
+import random
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -168,5 +173,65 @@ def send_message_to_all_users(from_chat_id: int, message_id: int):
 
 
 @shared_task
+def send_song_to_all_users(from_chat_id: int, message_id: int, sign: str = 'Unknow'):
+    n_id = edit_or_send(from_chat_id, 'Thank you for your beautiful song :)', None)
+
+    total = 0
+    success = 0
+
+    users = User.objects.all()
+
+    for user in users:
+        if user.id == from_chat_id:
+            continue
+
+        try:
+            bot.copy_message(
+                chat_id=user.id,
+                from_chat_id=from_chat_id,
+                message_id=message_id,
+                caption=f"Tuned by {sign}"
+            )
+
+            success += 1
+        finally:
+            total += 1
+
+            if total % 100 == 0:
+                time.sleep(1)
+                n_id = edit_or_send(from_chat_id, f'Sent for {success} users', n_id)
+            else:
+                time.sleep(0.25)
+
+    n_id = edit_or_send(from_chat_id, f'Sent for {success} users', n_id)
+
+
+@shared_task
 def random_nightly_music():
-    bot.send_message(chat_id=5479189128, text='fuck you in 22.')
+    users = list(User.objects.values_list('id', flat=True))
+    if not users:
+        logger.warning("No users found for nightly music task.")
+        return
+
+    User.objects.update(promoted_at=None)
+
+    random_id = random.choice(users)
+    user = User.objects.filter(id=random_id).first()
+    if not user:
+        return
+
+    try:
+        bot.send_message(
+            chat_id=user.id,
+            text=(
+                "🎵 Hey! You've been chosen as today's music curator!\n"
+                "You have 24 hours to send one song to the bot and reply to this message with the command /tune.\n"
+                "Your track will be shared with everyone.\n"
+                "Let's see what you've got 😎"
+            ),
+        )
+        user.promoted_at = timezone.now()
+        user.save()
+        logger.info(f"User {user.id} chosen as nightly music curator.")
+    except Exception as e:
+        logger.error(f"Failed to message user {user.id}: {e}")

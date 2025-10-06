@@ -209,3 +209,5 @@ __marimo__/
 # Custom
 cookies.txt
 downloads/
+
+celerybeat-schedule*
