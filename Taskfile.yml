@@ -1,0 +1,37 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  run:
+    desc: Run Bot + Celery together
+    deps:
+      - migrate
+      - worker
+      - beat
+      - bot
+    silent: true
+
+  bot:
+    desc: Run Bot server
+    cmds:
+      - uv run python manage.py runbot
+    silent: true
+
+  worker:
+    desc: Run Celery workers
+    cmds:
+      - uv run celery -A adagio worker -l info -c 4 --max-tasks-per-child=100
+    silent: true
+
+  beat:
+    desc: Run Celery beats
+    cmds:
+      - uv run celery -A adagio beat -l info
+    silent: true
+
+  migrate:
+    desc: Run migrations
+    cmds:
+      - uv run manage.py migrate
+    silent: true
