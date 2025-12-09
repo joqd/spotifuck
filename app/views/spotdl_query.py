@@ -21,7 +21,7 @@ def spotdl_query_handler(message: Message):
         dif = now - user.last_request_at
 
         if dif.total_seconds() < float(15):
-            bot.send_message(message.from_user.id, text='fuck you then')
+            bot.send_message(message.from_user.id, text='Slower you fucking idiot')
             return
 
     user.last_request_at = now
