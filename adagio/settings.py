@@ -40,6 +40,8 @@ REDIS_BROKER_DB: int = int(env('REDIS_BROKER_DB', default=0)) # type: ignore
 
 REDIS_RESULT_DB: int = int(env('REDIS_RESULT_DB', default=1)) # type: ignore
 
+PROXY: str | None = env('PROXY', default=None)
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",

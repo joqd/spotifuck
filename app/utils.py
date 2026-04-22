@@ -3,6 +3,7 @@ import httpx
 
 from adagio import bot
 from adagio import DOWNLOAD_DIR, COOKIE_FILE
+from adagio import PROXY
 
 from urllib.parse import urlparse
 from pathlib import Path
@@ -57,6 +58,7 @@ def download_audio_by_ytdlp(audio_url: str) -> tuple[str, dict]:
         'max_filesize': 1000 * (1024 * 1024),
         'outtmpl': outtmpl,
         'noplaylist': True,
+        'proxy': PROXY,
     }
 
     if os.path.exists(COOKIE_FILE):
