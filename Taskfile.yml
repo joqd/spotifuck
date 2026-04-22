@@ -6,7 +6,6 @@ tasks:
   run:
     desc: Run Bot + Celery together
     deps:
-      - migrate
       - worker
       - beat
       - bot
@@ -28,10 +27,4 @@ tasks:
     desc: Run Celery beats
     cmds:
       - uv run celery -A adagio beat -l info
-    silent: true
-
-  migrate:
-    desc: Run migrations
-    cmds:
-      - uv run manage.py migrate
     silent: true
