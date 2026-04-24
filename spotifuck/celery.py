@@ -4,9 +4,9 @@ from celery.schedules import crontab
 import os
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "adagio.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "spotifuck.settings")
 
-app = Celery("adagio")
+app = Celery("spotifuck")
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()

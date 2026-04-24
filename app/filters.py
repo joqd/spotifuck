@@ -1,7 +1,7 @@
 from telebot.custom_filters import SimpleCustomFilter
 from telebot.types import Message
 
-from adagio import SUDO
+from spotifuck import SUDO
 from app.models import User
 
 import re

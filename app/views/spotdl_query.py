@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from app.tasks import downloader
 from app.models import User
-from adagio import bot
+from spotifuck import bot
 
 
 

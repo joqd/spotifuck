@@ -1,7 +1,7 @@
 from telebot.types import Message
 from django.utils import timezone
 
-from adagio import bot
+from spotifuck import bot
 from app.models import User
 from app.tasks import send_song_to_all_users
 

@@ -1,7 +1,7 @@
 from spotdl import Spotdl, DownloaderOptions
 from django.conf import settings
 
-from adagio import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, COOKIE_FILE, DOWNLOAD_DIR
+from spotifuck import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, COOKIE_FILE, DOWNLOAD_DIR
 from app.utils import singleton
 
 

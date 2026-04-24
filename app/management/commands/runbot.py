@@ -1,7 +1,7 @@
 from django.core.management import BaseCommand
 from django.db import connections
 
-from adagio import bot
+from spotifuck import bot
 from app import urls as _
 
 from typing import Any

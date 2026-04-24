@@ -1,8 +1,8 @@
 from celery import shared_task
 from django.utils import timezone
 
-from adagio import bot
-from adagio import HISTORY_CHANNEL
+from spotifuck import bot
+from spotifuck import HISTORY_CHANNEL
 from app.spotdl_client import SpotDL
 from app.models import User, Download
 from app.utils import safe_unlink

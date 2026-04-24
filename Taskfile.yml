@@ -20,11 +20,11 @@ tasks:
   worker:
     desc: Run Celery workers
     cmds:
-      - uv run celery -A adagio worker -l info -c 4 --max-tasks-per-child=100
+      - uv run celery -A spotifuck worker -l info -c 4 --max-tasks-per-child=100
     silent: true
 
   beat:
     desc: Run Celery beats
     cmds:
-      - uv run celery -A adagio beat -l info
+      - uv run celery -A spotifuck beat -l info
     silent: true

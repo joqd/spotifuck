@@ -1,9 +1,9 @@
 from yt_dlp import YoutubeDL
 import httpx
 
-from adagio import bot
-from adagio import DOWNLOAD_DIR, COOKIE_FILE
-from adagio import PROXY
+from spotifuck import bot
+from spotifuck import DOWNLOAD_DIR, COOKIE_FILE
+from spotifuck import PROXY
 
 from urllib.parse import urlparse
 from pathlib import Path

@@ -1,4 +1,4 @@
-from adagio import bot
+from spotifuck import bot
 from app.views.ping import ping_handler
 from app.views.tune import tune_handler
 from app.views.start import start_handler
