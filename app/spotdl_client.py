@@ -1,8 +1,8 @@
-from spotdl import Spotdl, DownloaderOptions
 from django.conf import settings
+from spotdl import DownloaderOptions, Spotdl
 
-from spotifuck import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, COOKIE_FILE, DOWNLOAD_DIR
 from app.utils import singleton
+from spotifuck import COOKIE_FILE, DOWNLOAD_DIR, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 
 
 @singleton
@@ -15,6 +15,5 @@ class SpotDL:
                 cookie_file=COOKIE_FILE,
                 output=str(DOWNLOAD_DIR),
                 proxy=settings.PROXY,
-            )
+            ),
         )
-

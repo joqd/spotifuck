@@ -1,18 +1,17 @@
-from telebot import apihelper
-import telebot
-import environ
-
 from pathlib import Path
 
+import environ
+import telebot
+from telebot import apihelper
 
 env = environ.Env()
 env.read_env('.env')
 
 BOT_TOKEN: str = str(env('BOT_TOKEN'))
 
-SUDO: int = int(env('SUDO', default=0)) # type: ignore
+SUDO: int = int(env('SUDO', default=0))  # type: ignore
 
-LOCAL_BOT_API_BASE_URL: str = env('LOCAL_BOT_API_BASE_URL', default='') # type: ignore
+LOCAL_BOT_API_BASE_URL: str = env('LOCAL_BOT_API_BASE_URL', default='')  # type: ignore
 
 if LOCAL_BOT_API_BASE_URL:
     if LOCAL_BOT_API_BASE_URL.endswith('/'):
@@ -28,24 +27,24 @@ bot = telebot.TeleBot(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "6few3nci_q_o@l1dlbk81%wcxe!*6r29yu629&d97!hiqat9fa"
+SECRET_KEY = '6few3nci_q_o@l1dlbk81%wcxe!*6r29yu629&d97!hiqat9fa'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REDIS_HOST: str = str(env('REDIS_HOST', default='localhost')) # type: ignore
+REDIS_HOST: str = str(env('REDIS_HOST', default='localhost'))  # type: ignore
 
-REDIS_PORT: int = int(env('REDIS_PORT', default=6379)) # type: ignore
+REDIS_PORT: int = int(env('REDIS_PORT', default=6379))  # type: ignore
 
-REDIS_BROKER_DB: int = int(env('REDIS_BROKER_DB', default=0)) # type: ignore
+REDIS_BROKER_DB: int = int(env('REDIS_BROKER_DB', default=0))  # type: ignore
 
-REDIS_RESULT_DB: int = int(env('REDIS_RESULT_DB', default=1)) # type: ignore
+REDIS_RESULT_DB: int = int(env('REDIS_RESULT_DB', default=1))  # type: ignore
 
 PROXY: str | None = env('PROXY', default=None)
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / 'db.sqlite3',
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -58,7 +57,7 @@ COOKIE_FILE = BASE_DIR / 'cookies.txt'
 DOWNLOAD_DIR = BASE_DIR / 'downloads'
 DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-HISTORY_CHANNEL: int = int(env('HISTORY_CHANNEL')) # type: ignore
+HISTORY_CHANNEL: int = int(env('HISTORY_CHANNEL'))  # type: ignore
 
 TIME_ZONE = 'Asia/Tehran'
 
@@ -68,7 +67,7 @@ INSTALLED_APPS = ('app',)
 # Celery
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ENABLE_UTC = False
-CELERY_BROKER_URL    = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BROKER_DB}'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BROKER_DB}'
 CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_RESULT_DB}'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']

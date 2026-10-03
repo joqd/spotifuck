@@ -10,5 +10,26 @@ dependencies = [
     "django-environ==0.12.0",
     "httpx>=0.28.1",
     "pytelegrambotapi==4.29.1",
-    "spotdl>=4.4.2",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.0",
+]
+
+[tool.ruff]
+line-length = 120
+exclude = [
+	"**/migrations/**",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+]
+
+
+[tool.ruff.format]
+quote-style = "single"

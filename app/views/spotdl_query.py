@@ -1,10 +1,9 @@
-from telebot.types import Message
 from django.utils import timezone
+from telebot.types import Message
 
-from app.tasks import downloader
 from app.models import User
+from app.tasks import downloader
 from spotifuck import bot
-
 
 
 def spotdl_query_handler(message: Message):
@@ -29,4 +28,3 @@ def spotdl_query_handler(message: Message):
 
     n = bot.send_message(message.from_user.id, text='🙄 You are in line. please wait...')
     downloader.delay(message.text, message.from_user.id, n.id)
-    

@@ -1,27 +1,26 @@
+import logging
+import os
+import random
+import time
+
 from celery import shared_task
 from django.utils import timezone
 
-from spotifuck import bot
-from spotifuck import HISTORY_CHANNEL
+from app.models import Download, User
 from app.spotdl_client import SpotDL
-from app.models import User, Download
-from app.utils import safe_unlink
-from app.utils import edit_or_send
-from app.utils import is_youtube_url
-from app.utils import download_cover
-from app.utils import download_audio_by_ytdlp
-
-import os
-import time
-import random
-import logging
+from app.utils import download_audio_by_ytdlp, download_cover, edit_or_send, is_youtube_url, safe_unlink
+from spotifuck import HISTORY_CHANNEL, bot
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
 def downloader(query: str, user_id: int, n_id: int | None = None):
-    n_id = edit_or_send(user_id=user_id, text='- Searching...', n_id=n_id,)
+    n_id = edit_or_send(
+        user_id=user_id,
+        text='- Searching...',
+        n_id=n_id,
+    )
 
     spotdl = SpotDL().client
 
@@ -31,8 +30,8 @@ def downloader(query: str, user_id: int, n_id: int | None = None):
         return {'ok': False, 'error': 'not found'}
     song = songs[0]
 
-    n_id = edit_or_send(user_id=user_id, text=f'- Extract download link...', n_id=n_id)
-    
+    n_id = edit_or_send(user_id=user_id, text='- Extract download link...', n_id=n_id)
+
     if not is_youtube_url(query):
         urls = spotdl.get_download_urls([song])
 
@@ -49,25 +48,26 @@ def downloader(query: str, user_id: int, n_id: int | None = None):
         path, info = download_audio_by_ytdlp(url)
         path += '.mp3'
 
-        title = info.get("title", "Unknown")
+        title = info.get('title', 'Unknown')
 
-        duration = info.get("duration")
+        duration = info.get('duration')
         try:
             duration = int(duration) if duration is not None else None
         except (ValueError, TypeError):
             duration = None
 
-        thumbnails = info.get("thumbnails", [])
+        thumbnails = info.get('thumbnails', [])
         for t in thumbnails[::-1]:
             try:
-                resolution = t.get("resolution")
-                height = resolution.split("x")[0]
+                resolution = t.get('resolution')
+                height = resolution.split('x')[0]
                 height = int(height)
 
                 if height < 320:
-                    thumbnail = t.get("url")
+                    thumbnail = t.get('url')
                     break
-            except: continue
+            except:
+                continue
         else:
             thumbnail = None
     except:
@@ -81,19 +81,19 @@ def downloader(query: str, user_id: int, n_id: int | None = None):
     n_id = edit_or_send(user_id=user_id, text='- Uploading...', n_id=n_id)
 
     try:
-        with open(path, "rb") as audio:
+        with open(path, 'rb') as audio:
             if cover_path and os.path.exists(cover_path):
-                with open(cover_path, "rb") as thumb:
+                with open(cover_path, 'rb') as thumb:
                     message = bot.send_audio(
-                        chat_id=user_id, 
-                        audio=audio, 
+                        chat_id=user_id,
+                        audio=audio,
                         thumb=thumb,
                         title=title,
                         duration=duration,
                     )
             else:
                 message = bot.send_audio(
-                    chat_id=user_id, 
+                    chat_id=user_id,
                     audio=audio,
                     title=title,
                     duration=duration,
@@ -121,12 +121,12 @@ def downloader(query: str, user_id: int, n_id: int | None = None):
             text='Failed to upload.',
             n_id=n_id,
         )
-        return {"ok": False, "error": str(e)}
+        return {'ok': False, 'error': str(e)}
     finally:
         try:
             if path and os.path.exists(path):
                 safe_unlink(path)
-            
+
             if cover_path and os.path.exists(cover_path):
                 safe_unlink(cover_path)
         except Exception:
@@ -187,10 +187,7 @@ def send_song_to_all_users(from_chat_id: int, message_id: int, sign: str = 'Unkn
 
         try:
             bot.copy_message(
-                chat_id=user.id,
-                from_chat_id=from_chat_id,
-                message_id=message_id,
-                caption=f"Tuned by {sign}"
+                chat_id=user.id, from_chat_id=from_chat_id, message_id=message_id, caption=f'Tuned by {sign}'
             )
 
             success += 1
@@ -210,7 +207,7 @@ def send_song_to_all_users(from_chat_id: int, message_id: int, sign: str = 'Unkn
 def random_nightly_music():
     users = list(User.objects.values_list('id', flat=True))
     if not users:
-        logger.warning("No users found for nightly music task.")
+        logger.warning('No users found for nightly music task.')
         return
 
     User.objects.update(promoted_at=None)
@@ -225,13 +222,13 @@ def random_nightly_music():
             chat_id=user.id,
             text=(
                 "🎵 Hey! You've been chosen as today's music curator!\n"
-                "You have 24 hours to send one song to the bot and reply to this message with the command /tune.\n"
-                "Your track will be shared with everyone.\n"
+                'You have 24 hours to send one song to the bot and reply to this message with the command /tune.\n'
+                'Your track will be shared with everyone.\n'
                 "Let's see what you've got 😎"
             ),
         )
         user.promoted_at = timezone.now()
         user.save()
-        logger.info(f"User {user.id} chosen as nightly music curator.")
+        logger.info(f'User {user.id} chosen as nightly music curator.')
     except Exception as e:
-        logger.error(f"Failed to message user {user.id}: {e}")
+        logger.error(f'Failed to message user {user.id}: {e}')

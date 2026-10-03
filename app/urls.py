@@ -1,12 +1,11 @@
-from spotifuck import bot
-from app.views.ping import ping_handler
-from app.views.tune import tune_handler
-from app.views.start import start_handler
-from app.views.admin import status_handler, echo_handler
-from app.views.spotdl_query import spotdl_query_handler
+from app.filters import IsAdmin, IsCommand, IsForward, IsText
 from app.middlewares import WatchdogMiddleware
-from app.filters import IsAdmin, IsCommand, IsText, IsForward
-
+from app.views.admin import echo_handler, status_handler
+from app.views.ping import ping_handler
+from app.views.spotdl_query import spotdl_query_handler
+from app.views.start import start_handler
+from app.views.tune import tune_handler
+from spotifuck import bot
 
 # filters
 bot.add_custom_filter(IsAdmin())

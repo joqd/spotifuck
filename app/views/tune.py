@@ -1,11 +1,11 @@
-from telebot.types import Message
-from django.utils import timezone
+from datetime import timedelta
 
-from spotifuck import bot
+from django.utils import timezone
+from telebot.types import Message
+
 from app.models import User
 from app.tasks import send_song_to_all_users
-
-from datetime import timedelta
+from spotifuck import bot
 
 
 def tune_handler(message: Message):
@@ -33,11 +33,7 @@ def tune_handler(message: Message):
         bot.reply_to(message, text='You have to replay on a song')
         return
 
-    send_song_to_all_users.delay(
-        message.from_user.id, 
-        reply_to_message.id,
-        message.from_user.first_name
-    )
+    send_song_to_all_users.delay(message.from_user.id, reply_to_message.id, message.from_user.first_name)
 
     user.promoted_at = None
     user.save()

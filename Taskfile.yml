@@ -28,3 +28,22 @@ tasks:
     cmds:
       - uv run celery -A spotifuck beat -l info
     silent: true
+
+  format:
+    desc: Format using ruff
+    cmds:
+      - uv run ruff format .
+    silent: true
+
+  fix:
+    desc: Fix lint issues using ruff
+    cmds:
+      - uv run ruff check . --fix
+      - uv run ruff format .
+    silent: true
+
+  lint:
+    desc: Lint using ruff
+    cmds:
+      - uv run ruff check .
+    silent: true

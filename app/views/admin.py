@@ -1,11 +1,11 @@
-from telebot.types import Message
-from django.utils import timezone
-
-from spotifuck import bot
-from app.models import User, Download
-from app.tasks import send_message_to_all_users
-
 from datetime import timedelta
+
+from django.utils import timezone
+from telebot.types import Message
+
+from app.models import Download, User
+from app.tasks import send_message_to_all_users
+from spotifuck import bot
 
 
 def status_handler(message: Message):
@@ -55,4 +55,3 @@ def echo_handler(message: Message):
             return
     else:
         send_message_to_all_users.delay(message.from_user.id, reply_to_message.id)
-

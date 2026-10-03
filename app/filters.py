@@ -1,10 +1,10 @@
+import re
+
 from telebot.custom_filters import SimpleCustomFilter
 from telebot.types import Message
 
-from spotifuck import SUDO
 from app.models import User
-
-import re
+from spotifuck import SUDO
 
 
 class IsAdmin(SimpleCustomFilter):
@@ -19,12 +19,12 @@ class IsAdmin(SimpleCustomFilter):
 
         if user_id == SUDO:
             return True
-        
+
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return False
-        
+
         return user.is_admin
 
 
@@ -40,7 +40,7 @@ class IsCommand(SimpleCustomFilter):
 
         if re.fullmatch(command_pattern, message.text):
             return True
-        
+
         return False
 
 
@@ -51,7 +51,7 @@ class IsText(SimpleCustomFilter):
     def check(message: Message):
         if not message.text:
             return False
-        
+
         return True
 
 
@@ -62,5 +62,5 @@ class IsForward(SimpleCustomFilter):
     def check(message: Message):
         if message.forward_from_chat:
             return True
-        
+
         return False

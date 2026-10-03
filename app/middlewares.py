@@ -12,13 +12,7 @@ class WatchdogMiddleware(BaseMiddleware):
         first_name = message.from_user.first_name
         username = message.from_user.username
 
-        User.objects.update_or_create(
-            id=user_id,
-            defaults={
-                'first_name': first_name,
-                'username': username
-            }
-        )
+        User.objects.update_or_create(id=user_id, defaults={'first_name': first_name, 'username': username})
 
     def post_process(self, message, data, exception=None):
         pass
